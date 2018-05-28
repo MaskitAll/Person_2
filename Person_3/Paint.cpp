@@ -279,9 +279,10 @@ void Paint::screen_info(int &width, int &height) {
 		printf("Error: %d\n", GetLastError());
 }
 
-void Paint::deck_menu(Deck &deck) {
+void Paint::deck_menu(Deck &deck) {							// нужно сокращать и переводить
 	system("cls");
 	int current_card = 0;
+	int current_list_card = 0;
 	int flag = 0;
 	int widht = 0;											// x
 	int height = 0;											// y
@@ -292,7 +293,8 @@ void Paint::deck_menu(Deck &deck) {
 	int r2y = 6;
 	int r3x = (widht * 2 / 3);
 	int r3y = 6;
-								// размер экрана
+	Deck fighting_deck;
+																// размер экрана
 	print_box(r1x, r1y, widht, height - 1, 15);					// рамка окна
 	print_Hline(r2x, r2y, 15, widht);							// отделение названия
 	print_Wline(r3x, r3y, 15, height - 6);						// отделение меню от карт
@@ -302,7 +304,7 @@ void Paint::deck_menu(Deck &deck) {
 /*2*/	_print_deck(deck, current_card, r2x + 5, r2y + 5);
 		print_text(deck[current_card].getDescription(), r2x + 5, r2y + 20);
 
-/*3*/	print_text("{s(4,0)}Hello everyone!{s(15,0)}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
+/*3*/	print_text("{s(4,0)}Hello everyone!{s(15,0)}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to add card in fighting deck\n8 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
 
 	char vvod;
 	do {
@@ -338,7 +340,8 @@ void Paint::deck_menu(Deck &deck) {
 			deck[current_card].character_up(*deck[current_card].int_to_Character(n), up);
 			flag = 4;
 		}
-		if (vvod == '7' && deck.deck_size() != 0) { 
+		if (vvod == '7') { fighting_deck.new_card(); fighting_deck[fighting_deck.deck_size() - 1] = deck[current_card]; current_list_card = fighting_deck.deck_size() - 1; flag = 6; }
+		if (vvod == '8' && deck.deck_size() != 0) { 
 			deck.delete_card(current_card);
 			if (deck.deck_size() != 0) {
 				current_card = deck.deck_size() - 1;
@@ -351,9 +354,16 @@ void Paint::deck_menu(Deck &deck) {
 
 		}
 
+
+
+		if (vvod == 'w' || vvod == 'W') { if (current_list_card > 0) { current_list_card--; flag = 6; } }
+		if (vvod == 's' || vvod == 'S') { if (current_list_card < fighting_deck.deck_size() - 1) { current_list_card++; flag = 6; } }
+
 		if (vvod == 'a' || vvod == 'A') { if (current_card > 0) { current_card--; flag = 1; } }
 		if (vvod == 'd' || vvod == 'D') { if (current_card < deck.deck_size() - 1) { current_card++; flag = 1;} }
 		if (vvod == 'q' || vvod == 'Q') { break; }
+
+
 
 		if (flag == 1) {
 			fill_box(r2x + 1, r2y + 1, r3x - 1, height - 2);
@@ -383,7 +393,11 @@ void Paint::deck_menu(Deck &deck) {
 			fill_box(r2x + 1, r2y + 1, r3x - 1, height - 2);
 			flag = 0;
 		}
-
+		if (flag == 6) {
+			fill_box(r3x + 1, r3y + 1, widht - 1, height - 2);
+			print_list_deck(fighting_deck,current_list_card, r3x + 5, r3y + 5);
+			flag = 0;
+		}
 
 	} while (vvod != 'q' && vvod != 'Q');
 }
@@ -571,7 +585,7 @@ void Paint::reCard(Card &card, int x, int y) {
 }
 
 void Paint::print_card(Card card, int x, int y) {
-	print_text(card.Card_to_printstring(), x, y);
+	print_text(card.Card_to_printstring(),  x, y);
 }
 
 void Paint::print_deck(Deck deck) {
@@ -608,4 +622,32 @@ void Paint::_print_deck(Deck deck, int current, int x, int y) {
 		print_card(deck[current], x + 4, y);
 	}
 	print_card(deck[current], x + 3, y);
+}
+
+
+
+void Paint::print_list_deck(Deck deck, int x, int y) {
+	std::string str = "";
+	for (int i = 0; i < deck.deck_size(); ++i) {
+		str += deck[i].getName();
+		str += ";\n";
+	}
+	print_text(str, x, y);
+}
+
+void Paint::print_list_deck(Deck deck, int current, int x, int y) {
+	std::string str = "";
+	for (int i = 0; i < deck.deck_size(); ++i) {
+		if (i == current) { str += "{s(1, 0)}"; }
+		str += deck[i].getName();
+		str += ";";
+		if (i == current) { str += "{s(15, 0)}"; }
+		str += "\n";
+	}
+	print_text(str, x, y);
+}
+
+void Paint::print_fighting_card(Fighting_card fighting_card, int x_indent, int y_indent) {
+	
+
 }

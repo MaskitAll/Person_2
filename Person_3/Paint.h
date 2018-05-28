@@ -5,6 +5,7 @@
 
 #include "Deck.h"
 #include "Card.h"
+#include "Fighting_card.h"
 
 class Paint
 {
@@ -62,6 +63,10 @@ public:
 	void print_deck(Deck deck);															//Выводит на экран все карты списком
 	void print_deck(Deck deck, int x_indent, int y_indent, int x_field, int y_field);	//Выводит на экран все карты списком с отступами
 	void _print_deck(Deck deck, int current, int x, int y);
+	void print_list_deck(Deck deck, int x, int y);
+	void print_list_deck(Deck deck, int current, int x, int y);
+
+	void print_fighting_card(Fighting_card fighting_deck, int x_indent, int y_indent);
 
 };
 
