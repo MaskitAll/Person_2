@@ -24,17 +24,17 @@ public:
 	Deck(std::string filename);
 	~Deck();
 
-	void new_card();						//добавить новую карту
-	void delete_card(int current);			//удалить карту
-	int deck_size();						//возвращает количество карт
-	void shuffle();							//перемешать карты
-	void restore_order();					//восстановить порядок
+	void new_card();									//добавить новую карту
+	void delete_card(int current);						//удалить карту
+	int deck_size();									//возвращает количество карт
+	void shuffle();										//перемешать карты
+	void restore_order();								//восстановить порядок
 
-	std::string deck_to_filestring();
-	void filestring_to_deck(std::string filestring);
+	std::string deck_to_filestring();					//Перевод колоды в текстовый режим для записи в файл	
+	void filestring_to_deck(std::string filestring);	//Перевод колоды из текстового режима в режим колоды
 
-	void deck_to_file(std::string filename);
-	void file_to_deck(std::string filename);
+	void deck_to_file(std::string filename);			//Запись в файл текстовый режим колоды
+	void file_to_deck(std::string filename);			//Чтение из файла колоды
 
 };
 

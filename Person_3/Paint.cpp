@@ -364,23 +364,26 @@ void Paint::deck_menu(Deck &deck) {							// нужно сокращать и переводить
 		if (vvod == 'q' || vvod == 'Q') { break; }
 
 
-
+		/*закрашивание и заполнение зоны 2*/
 		if (flag == 1) {
 			fill_box(r2x + 1, r2y + 1, r3x - 1, height - 2);
 			_print_deck(deck, current_card, r2x + 5, r2y + 5);
 			print_text(deck[current_card].getDescription(), r2x + 5, r2y + 20);
 			flag = 0;
 		}
+		/*закрашивание и заполнение зоны 1*/
 		if (flag == 2) {
 			fill_box(r1x + 1, r1y + 1, widht - 1, r2y - 1);
 			print_text("{s(4,0)}MY GAME{s(15,0)}", (widht / 2) - 4, r1y + 3);
 			flag = 0;
 		}
+		/*закрашивание и заполнение зоны 3*/
 		if (flag == 3) {
 			fill_box(r3x + 1, r3y + 1, widht - 1, height - 2);
 			print_text("{s(4,0)}Hello everyone!{s(15,0)}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
 			flag = 0;
 		}
+		/*закрашивание и заполнение зоны 2 и 3*/
 		if (flag == 4) {
 			fill_box(r2x + 1, r2y + 1, r3x - 1, height - 2);
 			_print_deck(deck, current_card, r2x + 5, r2y + 5);
@@ -389,10 +392,12 @@ void Paint::deck_menu(Deck &deck) {							// нужно сокращать и переводить
 			print_text("{s(4,0)}Hello everyone!{s(15,0)}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
 			flag = 0;
 		}
+		/*закрашивание зоны 2*/
 		if (flag == 5) {
 			fill_box(r2x + 1, r2y + 1, r3x - 1, height - 2);
 			flag = 0;
 		}
+		/*закрашивание и заполнение зоны 3 списком fight_deck*/
 		if (flag == 6) {
 			fill_box(r3x + 1, r3y + 1, widht - 1, height - 2);
 			print_list_deck(fighting_deck,current_list_card, r3x + 5, r3y + 5);
@@ -623,7 +628,6 @@ void Paint::_print_deck(Deck deck, int current, int x, int y) {
 	}
 	print_card(deck[current], x + 3, y);
 }
-
 
 
 void Paint::print_list_deck(Deck deck, int x, int y) {
