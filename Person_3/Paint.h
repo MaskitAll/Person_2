@@ -5,7 +5,7 @@
 
 #include "Deck.h"
 #include "Card.h"
-#include "Fighting_card.h"
+#include "Fcard.h"
 
 class Paint
 {
@@ -41,6 +41,10 @@ public:
 	int Width_box(std::string str);														//Возвращает максимальную длину строки
 	std::string text_without_funcs(std::string str);									//Возвращает текст без функций изменения цвета
 	std::string text_without_funcs_and_break(std::string str);							//Возвращает текст без функций изменения цвета и символов перевода строки и табуляции
+	bool isfunc(std::string substr);													//Вспомогательная функция. Проверяет является ли строка текстовой функцией
+
+	void print_text(std::string str);													//Выводит текст со всеми текстовыми функциями
+	void print_text(std::string str, int lenght);										//Выводит текст со всеми текстовыми функциями и максимальной длиной строки lenght
 	void print_text(std::string str, int x, int y);										//Выводит текст с отступом х,у
 	void print_text(std::string str, int x, int y, int lenght);							//Выводит текст с отступом х,у и максимальной длиной строки lenght
 	void loading(int n, int delay, int x, int y);										//Визуальня картинка загрузки
@@ -66,7 +70,7 @@ public:
 	void print_list_deck(Deck deck, int x, int y);										//Вывод на экран списка имен карт
 	void print_list_deck(Deck deck, int current, int x, int y);							//Вывод на экран списка имен карт с записью в (х,у)
 
-	void print_fighting_card(Fighting_card fighting_deck, int x_indent, int y_indent);	//Вывод карты на игровом поле
+	void print_fighting_card(Fcard fcard, int x_indent, int y_indent);	//Вывод карты на игровом поле
 
 };
 

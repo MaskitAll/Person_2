@@ -9,6 +9,7 @@
 #include "Paint.h"
 #include "Card.h"
 #include "Deck.h"
+#include "Fcard.h"
 
 
 #include <Windows.h>
@@ -20,8 +21,16 @@
 int main()
 {
 	Paint Mypaint;
+	Fcard myfcard;
+
 	//Mypaint.fill_box("=", 3, 50, 15, 20, 30);
-	//Mypaint.print_text("-----------------\n|               |\n|{s(10, 0)} hello\tWorld {s(15, 0)}|\n|               |\n-----------------\n", 30, 20);
+	// (Mypaint.isfunc("{/s}")) { std::cout << "\nTrue\n\n"; }
+	Mypaint.print_text("{s(5, 0)}Anyone who {/s}reads Old and Middle{s(1, 0)} English{s(2, 0)} literary texts will be familiar {/s}with the mid-brown volumes of the EETS, {s(3, 0)}with the symbol {/s}of Alfred's jewel embo{s(4, 0)}ssed on{/s} the{/s} front cover.{/s}", 15, 30, 15);
+	//Mypaint.print_text("-----------------\n{s(5, 0)}|               |\n{s(1, 0)}|  hello\tWorld |{/s}\n|               |{/s} \n-----------------\n ", 30, 20);
+	Mypaint.print_text("{/s}myart{s(5, 0)}nnnn{/s}kkkk{s(4, 0)}qwert{s(6, 0)}asdf{/s}ssss{/s}myart{/s}", 40, 40);
+
+	Mypaint.setcur(50, 50);
+	system("pause");
 	//std::cout << "\n" << Mypaint.Width_box("----------------------------\n|               |\n\n|{s(10, 0)} hello\tWorld {s(15, 0)}|\n|               |\n-----------------\n") << "\n";
 	//Mypaint.print_Hline(5, 5, 15, 20);
 	//Mypaint.print_Wline(5, 6, 15, 10);
@@ -60,12 +69,16 @@ int main()
 	mydeck.new_card();
 	mydeck.new_card();
 
+
 	mydeck[0].recard((std::string)"qwe", 5, 1, 5555, 34, 12, 3, 3, (std::string)"deadas");
 	mydeck[1].recard((std::string)"asd", 1, 2, 5555, 34, 12, 3, 3, (std::string)"it`s better card!");
 	mydeck[2].recard((std::string)"zxc zxc", 2, 3, 5555, 34, 12, 3, 3, (std::string)"deadas");
 	mydeck[3].recard((std::string)"Maskit", 3, 4, 5555, 34, 12, 3, 3, (std::string)"deadas");
 	mydeck[4].recard((std::string)"sir", 2, 2, 35, 3, 7, 2, 1, (std::string)"last card");
 
+	//myfcard.setFcard(mydeck[0], 0, 0, false);
+	//Mypaint.print_fighting_card(myfcard, 10, 10);
+	//system("pause");
 
 	//Mypaint.print_deck(mydeck, 5, 1, 15, 15);
 

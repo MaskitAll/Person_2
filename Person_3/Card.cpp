@@ -309,8 +309,8 @@ std::string Card::Card_to_filestring() {
 
 std::string Card::character_to_printstring(Character character) {
 	//if (character.local <= 0) { return "0"; }
-	if (character.local < character.general) return "{s(4, 0)}" + std::to_string(character.local) + "{s(15, 0)}";
-	if (character.local > character.general) return "{s(1, 0)}" + std::to_string(character.local) + "{s(15, 0)}";
+	if (character.local < character.general) return "{s(4, 0)}" + std::to_string(character.local) + "{/s}";
+	if (character.local > character.general) return "{s(1, 0)}" + std::to_string(character.local) + "{/s}";
 	return std::to_string(character.local);
 }
 

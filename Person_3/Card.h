@@ -58,7 +58,7 @@ private:
 		~Character();
 		Character(const int general, int local);
 
-		Character& operator=( Character character);
+		Character& operator=(Character character);
 		bool& operator==(Character character);
 		bool& operator>(Character character);
 		bool& operator<(Character character);
@@ -102,10 +102,10 @@ public:
 	Character *int_to_Character(int n);								//1 - lvl, 2 - Rhand, 3 - Lhand, 4 - HP, 5 - Armor, 6 - Speed
 	std::string smth_to_filestring(std::string smth, int size);		//Перевод любой характеристики в string с отступом до |
 	std::string Card_to_filestring();								//Перевод карты в string
-	std::string character_to_printstring(Character character);
+	std::string character_to_printstring(Character character);		//Перевод характеристики к печатному виду стринг
 
-	int h_to_12(std::string str, bool h);
-	std::string Card_to_printstring();
+	int h_to_12(std::string str, bool h);							//Вспомогатльная функция
+	std::string Card_to_printstring();								//Перевод карты к печатному виду стринг
 	void filestring_to_Card(std::string filestring);				//Чтение карты из строки 
 
 	std::string getName();											//Получить имя карты

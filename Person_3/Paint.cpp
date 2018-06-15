@@ -26,6 +26,7 @@ void Paint::SetColor(int text, int background)
 }
 
 bool Paint::isNumber(std::string str) {
+	if (str == "") { return false; }
 	for (int i = 0; i < str.size(); ++i) {
 		if (str[i] != ' ') {
 			if (!isdigit(str[i])) {
@@ -77,9 +78,118 @@ std::string Paint::text_without_funcs_and_break(std::string str) {
 	return end_str;
 }
 
+/*{s(n, k)} {/s}*/
+
+bool Paint::isfunc(std::string substr) {
+	//std::cout << "\nsub = " << substr << "\n"; 
+	int i = 0;
+	if (substr[i] == '{') {
+		if (substr[i + 1] && substr[i + 1] == 's') {
+			int pos = 0;
+			int pos1 = 0;
+			int pos2 = 0;
+			pos = substr.find("(", i) + 1;
+			pos1 = substr.find(",", pos);
+			if (!isNumber(substr.substr(pos, pos1 - pos))) return false;
+			pos1++;
+			pos2 = substr.find(")", pos1);
+			if (!isNumber(substr.substr(pos1, pos2 - pos1))) return false;
+			return true;
+		}
+	}
+	if (substr == "{/s}") {
+		return true;
+	}
+	return false;
+}
+
+void Paint::print_text(std::string str) {
+	int y1 = 0;
+	int apostr = 0;
+	
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] != '{') {
+			std::cout << str[i];
+		}
+		else {
+			if (str[i] == '{' && isfunc(str.substr(i, str.find("}", i) - i + 1))) {
+				++i;
+				if (str[i] == 's') {
+					int textground = std::stoi(str.substr(str.find("(", i) + 1, str.find(",", i) - 1));
+					int background = std::stoi(str.substr(str.find(",", i) + 1, str.find(")", i) - 1));
+					i = str.find("}", i);
+					++apostr;
+					SetColor(textground, background);
+				}
+				else if (str[i] == '/') {
+					++i;
+					if (str[i] == 's') {
+						if (apostr <= 1) { i = str.find("}", i); SetColor(15, 0); }
+						else {
+							int textground = 0;
+							int background = 0;
+							int pos = i - 3;
+							for (int q = apostr; q > 0; --q) {
+								while (str[pos] != '{' && pos > 0) { --pos; }
+								if (str[pos + 1] == 's' && isfunc(str.substr(pos, str.find("}", pos) - pos + 1))) {
+									--pos;
+									textground = std::stoi(str.substr(str.find("(", pos) + 1, str.find(",", pos) - 1));
+									background = std::stoi(str.substr(str.find(",", pos) + 1, str.find(")", pos) - 1));
+								}
+								else if (str.substr(pos, str.find("}", pos) - pos + 1) == "{/s}" && q == 0) {
+									textground = 15;
+									background = 0;
+									break;
+								}
+								else if (str.substr(pos, str.find("}", pos) - pos + 1) == "{/s}") {
+									++q;
+									--pos;
+									continue;
+								}
+							}
+							i = str.find("}", i);
+							SetColor(textground, background);
+						}
+					}
+					if (apostr > 0) { --apostr; }
+				}
+			}
+			else {
+			}
+		}
+	}
+}
+
+void Paint::print_text(std::string str, int lenght) {
+	int current_len = 0;
+	for (int i = 0; i < str.size(); ++i) {
+		if (current_len % lenght == 0) {
+			int k = i;
+			int sublenght = lenght;
+			while (k > 0 && (i - k) < sublenght && str[k] != ' ' && str[k] != '\n') { 
+				if (str[k] == '}') {
+					int tsize = 0;
+					while(str[k] != '{') {--k; ++tsize; }
+					if (isfunc(str.substr(k, tsize))) {sublenght += tsize;}
+				}
+				--k;
+			}
+			if (str[k] == ' ') { str[k] = '\n'; i = k; }
+			else { str = str.substr(0, i) + "\n" + str.substr(i, str.size()); }
+			current_len = 0;
+		}
+		if (str[i] == '{' && isfunc(str.substr(i, str.find("}", i) - i + 1))) {
+			i += str.find("}", i) - i + 1;
+		}
+			++current_len;
+	}
+	print_text(str);
+}
+
 void Paint::print_text(std::string str, int x, int y) {
 	if (x < 0 || y < 0) { return; }
 	int y1 = 0;
+	int apostr = 0;
 	setcur(x, y + y1);
 	for (int i = 0; i < str.size(); i++) {
 		if (str[i] != '\n' && str[i] != '{') {
@@ -91,73 +201,79 @@ void Paint::print_text(std::string str, int x, int y) {
 				setcur(x, y + y1);
 				continue;
 			}
-			if (str[i] == '{') {
+			if (str[i] == '{' && isfunc(str.substr(i, str.find("}", i) - i + 1))) {
 				++i;
 				if (str[i] == 's') {
-					int textground = 0;
-					int background = 0;
-					int pos = 0;
-					int pos1 = 0;
-					int pos2 = 0;
-					pos = str.find("(", i) + 1;
-					pos1 = str.find(",", pos);
-					if (isNumber(str.substr(pos, pos1 - pos))) {
-						textground = std::stoi(str.substr(pos, pos1 - pos));
-					}
-					else {
-						i -= 1;
-						std::cout << str[i];
-						continue;
-					}
-					pos1++;
-					pos2 = str.find(")", pos1);
-					if (isNumber(str.substr(pos1, pos2 - pos1))) {
-						background = std::stoi(str.substr(pos1, pos2 - pos1));
-					}
-					else {
-						i -= 1;
-						std::cout << str[i];
-						continue;
-					}
-					i = pos2 + 1;
+					int textground = std::stoi(str.substr(str.find("(", i) + 1, str.find(",", i) - 1));
+					int background = std::stoi(str.substr(str.find(",", i) + 1, str.find(")", i) - 1));
+					i = str.find("}", i);
+					++apostr;
 					SetColor(textground, background);
 				}
-				else {
-					i -= 1;
-					std::cout << str[i];
+				else if (str[i] == '/') {
+					++i;
+					if (str[i] == 's') {
+						if (apostr <= 1) { i = str.find("}", i); SetColor(15, 0); }
+						else {
+							int textground = 0;
+							int background = 0;
+							int pos = i - 3;
+							for (int q = apostr; q > 0; --q) {
+								while (str[pos] != '{' && pos > 0) { --pos; }
+								if (str[pos + 1] == 's' && isfunc(str.substr(pos, str.find("}", pos) - pos + 1))) {
+									--pos;
+									textground = std::stoi(str.substr(str.find("(", pos) + 1, str.find(",", pos) - 1));
+									background = std::stoi(str.substr(str.find(",", pos) + 1, str.find(")", pos) - 1));
+								}
+								else if (str.substr(pos, str.find("}", pos) - pos + 1) == "{/s}" && q == 0) {
+									textground = 15; 
+									background = 0;
+									break;
+								}
+								else if(str.substr(pos, str.find("}", pos) - pos + 1) == "{/s}"){
+									++q;
+									--pos;
+									continue;
+								}
+							}
+							i = str.find("}", i);
+							SetColor(textground, background);
+						}
+					}
+					if (apostr > 0) { --apostr; }
 				}
+			}
+			else {
 			}
 		}
 	}
 }
-
+	
 void Paint::print_text(std::string str, int x, int y, int lenght) {
-	std::string end_str = "";
-	int current_lenght = 0;
-	int j = 0;
+	int current_len = 0;
 	for (int i = 0; i < str.size(); ++i) {
-		if (current_lenght < lenght) {
-			if (str[i] == '{') {
-				while (str[i] != '}') { ++i; }
+		if (current_len % lenght == 0) {
+			int k = i;
+			int sublenght = lenght;
+			while (k > 0 && (i - k) < sublenght && str[k] != ' ' && str[k] != '\n') {
+				if (str[k] == '}') {
+					int tsize = 0;
+					while (str[k] != '{') { --k; ++tsize; }
+					if (isfunc(str.substr(k, tsize))) { sublenght += tsize; }
+				}
+				--k;
 			}
-			if (str[i] == '\n') {
-				current_lenght = 0;
-				continue;
-			}
-			current_lenght++;
+			if (str[k] == ' ') { str[k] = '\n'; i = k; }
+			else { str = str.substr(0, i) + "\n" + str.substr(i, str.size()); }
+			current_len = 0;
 		}
-		else {
-			while (str[i] != ' ' )
-			{
-				--i;
-			}
-			current_lenght = 0;
-			end_str += str.substr(j, i - j);
-			j = i;
+		if (str[i] == '{' && isfunc(str.substr(i, str.find("}", i) - i + 1))) {
+			i += str.find("}", i) - i + 1;
 		}
+		++current_len;
 	}
-	print_text(end_str, x, y);
-}		/// много много работать
+	print_text(str, x, y);
+}
 
 void Paint::loading(int n, int delay, int x, int y) {
 	for (int j = 0; j < n; ++j) {
@@ -299,12 +415,12 @@ void Paint::deck_menu(Deck &deck) {							// нужно сокращать и переводить
 	print_Hline(r2x, r2y, 15, widht);							// отделение названия
 	print_Wline(r3x, r3y, 15, height - 6);						// отделение меню от карт
 
-/*1*/	print_text("{s(3,0)}MY GAME{s(15,0)}", (widht / 2) - 4, r1y + 3);
+/*1*/	print_text("{s(3,0)}MY GAME{/s}", (widht / 2) - 4, r1y + 3);
 
 /*2*/	_print_deck(deck, current_card, r2x + 5, r2y + 5);
 		print_text(deck[current_card].getDescription(), r2x + 5, r2y + 20);
 
-/*3*/	print_text("{s(4,0)}Hello everyone!{s(15,0)}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to add card in fighting deck\n8 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
+/*3*/	print_text("{s(4,0)}Hello everyone!{/s}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to add card in fighting deck\n8 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
 
 	char vvod;
 	do {
@@ -374,13 +490,13 @@ void Paint::deck_menu(Deck &deck) {							// нужно сокращать и переводить
 		/*закрашивание и заполнение зоны 1*/
 		if (flag == 2) {
 			fill_box(r1x + 1, r1y + 1, widht - 1, r2y - 1);
-			print_text("{s(4,0)}MY GAME{s(15,0)}", (widht / 2) - 4, r1y + 3);
+			print_text("{s(4,0)}MY GAME{/s}", (widht / 2) - 4, r1y + 3);
 			flag = 0;
 		}
 		/*закрашивание и заполнение зоны 3*/
 		if (flag == 3) {
 			fill_box(r3x + 1, r3y + 1, widht - 1, height - 2);
-			print_text("{s(4,0)}Hello everyone!{s(15,0)}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
+			print_text("{s(4,0)}Hello everyone!{/s}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
 			flag = 0;
 		}
 		/*закрашивание и заполнение зоны 2 и 3*/
@@ -389,7 +505,7 @@ void Paint::deck_menu(Deck &deck) {							// нужно сокращать и переводить
 			_print_deck(deck, current_card, r2x + 5, r2y + 5);
 			print_text(deck[current_card].getDescription(), r2x + 5, r2y + 20);
 			fill_box(r3x + 1, r3y + 1, widht - 1, height - 2);
-			print_text("{s(4,0)}Hello everyone!{s(15,0)}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
+			print_text("{s(4,0)}Hello everyone!{/s}\n\nThis is my game\nLet`s play!\n\n1 - to add new card\n2 - to shuffle deck\n3 - to restore order deck\n4 - to save deck in file\n5 - to take deck in file\n6 - to change characteristic\n7 - to delete card\n\nA - to left card\nD - to right card", r3x + 2, r3y + 5);
 			flag = 0;
 		}
 		/*закрашивание зоны 2*/
@@ -629,7 +745,6 @@ void Paint::_print_deck(Deck deck, int current, int x, int y) {
 	print_card(deck[current], x + 3, y);
 }
 
-
 void Paint::print_list_deck(Deck deck, int x, int y) {
 	std::string str = "";
 	for (int i = 0; i < deck.deck_size(); ++i) {
@@ -645,13 +760,20 @@ void Paint::print_list_deck(Deck deck, int current, int x, int y) {
 		if (i == current) { str += "{s(1, 0)}"; }
 		str += deck[i].getName();
 		str += ";";
-		if (i == current) { str += "{s(15, 0)}"; }
+		if (i == current) { str += "{/s}"; }
 		str += "\n";
 	}
 	print_text(str, x, y);
 }
 
-void Paint::print_fighting_card(Fighting_card fighting_card, int x_indent, int y_indent) {
-	
-
+void Paint::print_fighting_card(Fcard fcard, int x_indent, int y_indent) {
+	print_text(fcard.fcard.getName(), fcard.fx + x_indent + (12 - fcard.fcard.getName().size()) / 2, fcard.fy + 1 + y_indent);
+	print_text(std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(1)).local), fcard.fx + x_indent + (12 - std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(1)).local).size()) / 2, fcard.fy + 2 + y_indent);
+	print_text(std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(2)).local) + " \/ " + std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(3)).local), fcard.fx + x_indent + (12 - (std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(2)).local) + " \/ " + std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(3)).local)).size() / 2), fcard.fy + 3 + y_indent);
+	if (!fcard.fcurrent) {
+		print_box(fcard.fx + x_indent, fcard.fy + y_indent, fcard.fx + x_indent + 14, fcard.fy + y_indent + 5, 15);
+	}
+	else {
+		print_box(fcard.fx + x_indent, fcard.fy + y_indent, fcard.fx + x_indent  + 14, fcard.fy + y_indent + 5, 2);
+	}
 }
