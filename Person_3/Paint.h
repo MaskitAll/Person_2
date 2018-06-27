@@ -5,7 +5,9 @@
 
 #include "Deck.h"
 #include "Card.h"
+#include "Fdeck.h"
 #include "Fcard.h"
+
 
 class Paint
 {
@@ -70,7 +72,11 @@ public:
 	void print_list_deck(Deck deck, int x, int y);										//Вывод на экран списка имен карт
 	void print_list_deck(Deck deck, int current, int x, int y);							//Вывод на экран списка имен карт с записью в (х,у)
 
-	void print_fighting_card(Fcard fcard, int x_indent, int y_indent);	//Вывод карты на игровом поле
+	void print_fighting_card(Fcard fcard);	//Вывод карты на игровом поле
+	void print_fighting_card(Fcard fcard, int x_indent, int y_indent);
+	void print_fighting_deck(Fdeck fdeck);
+	void print_fighting_deck(Fdeck fdeck, int x_indent, int y_indent);
 
+	void fdeck_menu(Fdeck &fightdeck);
 };
 

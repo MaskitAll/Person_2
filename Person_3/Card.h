@@ -10,24 +10,26 @@ class Card
 private:
 	enum Elements
 	{
-		air,
-		fire,
-		ground,
-		water,
-		light,
-		dark
+		air = 1,
+		fire = 2,
+		ground = 3,
+		water = 4,
+		light = 5,
+		dark = 6,
+		Eempty = NULL
 	};
 
 	enum Race
 	{
-		human,
-		elf,
-		orc,
-		goblin,
-		angel,
-		gnoll,
-		inferno,
-		undead
+		human = 1,
+		elf = 2,
+		orc = 3,
+		goblin = 4,
+		angel = 5,
+		gnoll = 6,
+		inferno = 7,
+		undead = 8,
+		Rempty = NULL
 	};
 
 	enum ConsoleColor
@@ -108,6 +110,7 @@ public:
 	std::string Card_to_printstring();								//ѕеревод карты к печатному виду стринг
 	void filestring_to_Card(std::string filestring);				//„тение карты из строки 
 
+	void set_emptyCard();
 	std::string getName();											//ѕолучить им€ карты
 	void setName(std::string name);									//»зменить им€ карты
 	std::string getDescription();
@@ -124,9 +127,9 @@ public:
 	void recard(std::string newName, int newRhand, int newLhand, int newHP, int newArmor, int newSpeed, int newrace, int newelements, std::string newDescription);
 	void recard(std::string newName, int newRhand, int newLhand, int newHP, int newArmor, int newSpeed, Race newrace, Elements newelements, std::string newDescription);
 	
-
-	bool Card::isEmptyCharacter(Character &current);				//провер€ет character == NULL
-	bool Card::isEmptyCard();										//провер€ет card == NULL
+	void swapCard(Card &second_card);
+	bool isEmptyCharacter(Character &current);				//провер€ет character == NULL
+	bool isEmptyCard();										//провер€ет card == NULL
 
 	void character_up(Character &current, int up);					//измен€ет характеристику на +up
 	void character_change(Character &current, int up);				//измен€ет характеристику на up

@@ -11,7 +11,9 @@ Card::Character::~Character() {
 }
 
 Card::Character& Card::Character::operator=(Character character) {
-	return Character(character.general, character.local);
+	*(const_cast<int *>(&general)) = character.general;
+	local = character.local;
+	return *this;
 }
 
 bool& Card::Character::operator==(Character character) {	
@@ -37,6 +39,13 @@ bool& Card::Character::operator<=(Character character) {
 bool& Card::Character::operator>=(Character character) {
 	bool a = (general >= character.general);
 	return a;
+}
+
+void Card::swapCard(Card &second_card) {
+	Card subcard;
+	subcard = *this;
+	*this = second_card;
+	second_card = subcard;
 }
 
 bool Card::isEmptyCharacter(Character &current) {
@@ -96,12 +105,31 @@ bool& Card::operator>(Card card) {
 }
 
 
+
+void Card::set_emptyCard() {
+	setID(0);
+	Name = "";
+	setCharacter(lvl, 0);
+	race = Rempty;
+	setCharacter(Rhand, 0);
+	setCharacter(Lhand, 0);
+	setCharacter(HP, 0);
+	setCharacter(Armor, 0);
+	setCharacter(Speed, 0);
+	elements = Eempty;
+	Description = "";
+}
+
 std::string Card::getName() {
 	return Name;
 }
 
 void Card::setName( std::string name) {
-	Name = name;
+	int i = 0;
+	while (name.substr(i, 2) != "  " && i < name.size()) {
+		++i;
+	}
+	Name = name.substr(0, i);
 }
 
 std::string Card::getDescription() {
@@ -109,7 +137,8 @@ std::string Card::getDescription() {
 }
 
 void Card::setDescription(std::string description) {
-	Description = description;
+	if (description.size() < 30) Description = description;
+	else Description = description.substr(0, 30);
 }
 
 int Card::getID() {
@@ -151,7 +180,7 @@ std::string Card::race_to_string(Race race) {
 	default:
 		break;
 	}
-	return NULL;
+	return "";
 }
 
 Card::Race Card::string_to_Race(std::string race) {
@@ -171,7 +200,7 @@ Card::Race Card::string_to_Race(std::string race) {
 		return inferno;
 	if(race.find("undead") != -1)
 		return undead;
-	return human;
+	return Rempty;
 }
 
 std::string Card::get_race() {
@@ -200,7 +229,7 @@ std::string Card::elements_to_string(Elements elements) {
 	default:
 		break;
 	}
-	return NULL;
+	return "";
 }
 
 Card::Elements Card::string_to_Elements(std::string elements) {
@@ -217,7 +246,7 @@ Card::Elements Card::string_to_Elements(std::string elements) {
 		return light;
 	if(elements.find("water") != -1)
 		return water;
-
+	return Eempty;
 }
 
 Card::Character *Card::int_to_Character(int n) {

@@ -2,7 +2,7 @@
 #include "Card.h"
 
 
-class Fcard
+class Fcard:Card
 {
 
 
@@ -19,10 +19,16 @@ public:
 	~Fcard();
 
 	bool isCard();
+	bool isCurrent();
 
 	void setFcard(Card card, int x, int y, bool current);
+	void set_emptyFcard();
+	void set_emptyFcard(int x, int y);
+
+	Card getCard();
 
 	std::string Fcard_to_printstring();
+	std::string Fcard::emptyFcard_to_printstring();
 
 	void ch_current();
 

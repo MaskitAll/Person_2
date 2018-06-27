@@ -39,7 +39,7 @@ bool Paint::isNumber(std::string str) {
 
 int Paint::Width_box(std::string str) {
 	int max_widght = 0;
-	for (int i = 0; i < str.size(); ++i) {
+	for (size_t i = 0; i < str.size(); ++i) {
 		if (max_widght < str.find("\n", i)) {
 			max_widght = str.find("\n", i) - i;
 			i = str.find("\n", i);
@@ -50,7 +50,7 @@ int Paint::Width_box(std::string str) {
 
 std::string Paint::text_without_funcs(std::string str) {
 	std::string end_str = "";
-	int size = 0;
+	size_t size = 0;
 	int i = 0;
 	while (size < str.size()) {
 		i = str.find("{", i);
@@ -79,6 +79,7 @@ std::string Paint::text_without_funcs_and_break(std::string str) {
 }
 
 /*{s(n, k)} {/s}*/
+/*{u}{/u}*/
 
 bool Paint::isfunc(std::string substr) {
 	//std::cout << "\nsub = " << substr << "\n"; 
@@ -162,7 +163,7 @@ void Paint::print_text(std::string str) {
 
 void Paint::print_text(std::string str, int lenght) {
 	int current_len = 0;
-	for (int i = 0; i < str.size(); ++i) {
+	for (size_t i = 0; i < str.size(); ++i) {
 		if (current_len % lenght == 0) {
 			int k = i;
 			int sublenght = lenght;
@@ -251,7 +252,7 @@ void Paint::print_text(std::string str, int x, int y) {
 	
 void Paint::print_text(std::string str, int x, int y, int lenght) {
 	int current_len = 0;
-	for (int i = 0; i < str.size(); ++i) {
+	for (size_t i = 0; i < str.size(); ++i) {
 		if (current_len % lenght == 0) {
 			int k = i;
 			int sublenght = lenght;
@@ -635,10 +636,10 @@ void Paint::reCard(Card &card, int x, int y) {
 
 	setcur(x, y + 6);
 	int race = 0;
-	std::cout << "Enter new race(0 - 7): ";
+	std::cout << "Enter new race(0 - 8): ";
 	setcur(x, y + 7);
 	std::cin >> race;
-	while (race < 0 || race > 7)
+	while (race < 0 || race > 8)
 	{
 		fill_box(x, y + 7, x + 25, y + 7);
 		setcur(x, y + 7);
@@ -680,10 +681,10 @@ void Paint::reCard(Card &card, int x, int y) {
 
 	setcur(x, y + 14);
 	int elements = 0;
-	std::cout << "Enter new card's elements(0 - 5): ";
+	std::cout << "Enter new card's elements(0 - 6): ";
 	setcur(x, y + 15);
 	std::cin >> elements;
-	while (elements < 0 || elements > 5)
+	while (elements < 0 || elements > 6)
 	{
 		fill_box(x, y + 15, x + 25, y + 15);
 		setcur(x, y + 15);
@@ -766,14 +767,73 @@ void Paint::print_list_deck(Deck deck, int current, int x, int y) {
 	print_text(str, x, y);
 }
 
-void Paint::print_fighting_card(Fcard fcard, int x_indent, int y_indent) {
-	print_text(fcard.fcard.getName(), fcard.fx + x_indent + (12 - fcard.fcard.getName().size()) / 2, fcard.fy + 1 + y_indent);
-	print_text(std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(1)).local), fcard.fx + x_indent + (12 - std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(1)).local).size()) / 2, fcard.fy + 2 + y_indent);
-	print_text(std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(2)).local) + " \/ " + std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(3)).local), fcard.fx + x_indent + (12 - (std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(2)).local) + " \/ " + std::to_string(fcard.fcard.getCharacter(*fcard.fcard.int_to_Character(3)).local)).size() / 2), fcard.fy + 3 + y_indent);
-	if (!fcard.fcurrent) {
-		print_box(fcard.fx + x_indent, fcard.fy + y_indent, fcard.fx + x_indent + 14, fcard.fy + y_indent + 5, 15);
+void Paint::print_fighting_card(Fcard fightcard) {
+	if (fightcard.fcurrent) {
+		if (fightcard.fcard.isEmptyCard()) { print_text("{s(2,0)}" + fightcard.emptyFcard_to_printstring() + "{/s}", fightcard.fx * 14, fightcard.fy * 5); }
+		else {
+			print_text("{s(2,0)}" + fightcard.Fcard_to_printstring() + "{/s}", fightcard.fx * 14, fightcard.fy * 5);
+		}
 	}
 	else {
-		print_box(fcard.fx + x_indent, fcard.fy + y_indent, fcard.fx + x_indent  + 14, fcard.fy + y_indent + 5, 2);
+		if (fightcard.fcard.isEmptyCard()) { print_text(fightcard.emptyFcard_to_printstring(), fightcard.fx * 14, fightcard.fy * 5); }
+		else {
+			print_text(fightcard.Fcard_to_printstring(), fightcard.fx * 14, fightcard.fy * 5);
+		}
 	}
+}	
+
+void Paint::print_fighting_card(Fcard fcard, int x_indent, int y_indent) {
+	if (fcard.fcurrent == true) {
+		if (fcard.fcard.isEmptyCard()) { print_text("{s(2,0)}" + fcard.emptyFcard_to_printstring() + "{/s}", fcard.fx * 14 + x_indent, fcard.fy * 5 + y_indent); }
+		else {
+			print_text("{s(2,0)}" + fcard.Fcard_to_printstring() + "{/s}", fcard.fx * 14 + x_indent, fcard.fy * 5 + y_indent);
+		}
+	}
+	else {
+		if (fcard.fcard.isEmptyCard()) { print_text(fcard.emptyFcard_to_printstring(), fcard.fx * 14 + x_indent, fcard.fy * 5 + y_indent); }
+		else {
+			print_text(fcard.Fcard_to_printstring(), fcard.fx * 14 + x_indent, fcard.fy * 5 + y_indent);
+		}
+	}
+}
+
+void Paint::print_fighting_deck(Fdeck fdeck){
+	for (int y = 0; y < 6; ++y) {
+		for (int x = 0; x < 6; ++x) {
+			print_fighting_card(fdeck.getfcard(x, y));
+		}
+	}
+}
+
+void Paint::print_fighting_deck(Fdeck fdeck, int x_indent, int y_indent) {
+	for (int y = 0; y < 6; ++y) {
+		for (int x = 0; x < 6; ++x) {
+			print_fighting_card(fdeck.getfcard(x, y), x_indent, y_indent);
+		}
+	}
+}
+
+void Paint::fdeck_menu(Fdeck &fightdeck){
+	print_fighting_deck(fightdeck);
+	print_list_deck(fightdeck.getFdeck(), 87, 2);
+	 
+	char vvod;
+	do {
+		setcur(0, 0);
+		SetColor(0, 0);
+		vvod = _getche();
+		SetColor(15, 0);
+		if (vvod == 'w' || vvod == 'W') { fightdeck.step_up(); }
+		if (vvod == 's' || vvod == 'S') { fightdeck.step_down(); }
+		if (vvod == 'a' || vvod == 'A') { fightdeck.step_left(); }
+		if (vvod == 'd' || vvod == 'D') { fightdeck.step_right(); }
+
+		if (vvod == '1') { fightdeck.setCard(); }
+		
+
+
+		print_fighting_deck(fightdeck);
+		fill_box(87, 2, 100, 20);
+		print_list_deck(fightdeck.getFdeck(), 87, 2);
+	} while (vvod != 'q' && vvod != 'Q');
 }

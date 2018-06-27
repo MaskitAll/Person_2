@@ -10,27 +10,28 @@
 #include "Card.h"
 #include "Deck.h"
 #include "Fcard.h"
+#include "Fdeck.h"
 
 
 #include <Windows.h>
 #include <iostream>
 
 
-
-
 int main()
 {
+	Deck mydeck;
 	Paint Mypaint;
 	Fcard myfcard;
+	Fdeck myfdeck;
 
 	//Mypaint.fill_box("=", 3, 50, 15, 20, 30);
 	// (Mypaint.isfunc("{/s}")) { std::cout << "\nTrue\n\n"; }
-	Mypaint.print_text("{s(5, 0)}Anyone who {/s}reads Old and Middle{s(1, 0)} English{s(2, 0)} literary texts will be familiar {/s}with the mid-brown volumes of the EETS, {s(3, 0)}with the symbol {/s}of Alfred's jewel embo{s(4, 0)}ssed on{/s} the{/s} front cover.{/s}", 15, 30, 15);
+	//Mypaint.print_text("{s(5, 0)}Anyone who {/s}reads Old and Middle{s(1, 0)} English{s(2, 0)} literary texts will be familiar {/s}with the mid-brown volumes of the EETS, {s(3, 0)}with the symbol {/s}of Alfred's jewel embo{s(4, 0)}ssed on{/s} the{/s} front cover.{/s}", 15, 30, 20);
 	//Mypaint.print_text("-----------------\n{s(5, 0)}|               |\n{s(1, 0)}|  hello\tWorld |{/s}\n|               |{/s} \n-----------------\n ", 30, 20);
-	Mypaint.print_text("{/s}myart{s(5, 0)}nnnn{/s}kkkk{s(4, 0)}qwert{s(6, 0)}asdf{/s}ssss{/s}myart{/s}", 40, 40);
+	//Mypaint.print_text("{/s}myart{s(5, 0)}nnnn{/s}kkkk{s(4, 0)}qwert{s(6, 0)}asdf{/s}ssss{/s}myart{/s}", 40, 40);
 
-	Mypaint.setcur(50, 50);
-	system("pause");
+	//Mypaint.setcur(50, 50);
+	//system("pause");
 	//std::cout << "\n" << Mypaint.Width_box("----------------------------\n|               |\n\n|{s(10, 0)} hello\tWorld {s(15, 0)}|\n|               |\n-----------------\n") << "\n";
 	//Mypaint.print_Hline(5, 5, 15, 20);
 	//Mypaint.print_Wline(5, 6, 15, 10);
@@ -62,34 +63,37 @@ int main()
 
 
 	//system("pause");
-	Deck mydeck;
-	mydeck.new_card();
-	mydeck.new_card();
-	mydeck.new_card();
-	mydeck.new_card();
-	mydeck.new_card();
 
+	//mydeck.new_card();
+	mydeck.file_to_deck("Deck.txt");
+	mydeck.new_card();
+	
+	//myfdeck;
 
-	mydeck[0].recard((std::string)"qwe", 5, 1, 5555, 34, 12, 3, 3, (std::string)"deadas");
-	mydeck[1].recard((std::string)"asd", 1, 2, 5555, 34, 12, 3, 3, (std::string)"it`s better card!");
-	mydeck[2].recard((std::string)"zxc zxc", 2, 3, 5555, 34, 12, 3, 3, (std::string)"deadas");
-	mydeck[3].recard((std::string)"Maskit", 3, 4, 5555, 34, 12, 3, 3, (std::string)"deadas");
-	mydeck[4].recard((std::string)"sir", 2, 2, 35, 3, 7, 2, 1, (std::string)"last card");
+	//for (int q = 0; q < mydeck.deck_size(); ++q) {
+		//myfcard.setFcard(mydeck[mydeck.deck_size() - 1], 0, 0, false);
+		//myfcard.fcard = mydeck[0];
+		//mydeck[0].setCharacter(*mydeck[0].int_to_Character(4), 5);
 
-	//myfcard.setFcard(mydeck[0], 0, 0, false);
-	//Mypaint.print_fighting_card(myfcard, 10, 10);
-	//system("pause");
+		//Mypaint.print_card(mydeck[0], 15, 15);
+		//Mypaint.print_card(myfcard.fcard, 35, 15);
+		//myfcard.fcard.character_up(*myfcard.fcard.int_to_Character(4), 4);
+		//Mypaint.print_fighting_card(myfcard);
+
+	//}
+	//Mypaint.print_text(myfcard.Fcard_to_printstring(), 10, 10);
+
+	//Mypaint.print_fighting_deck(myfdeck);
+	myfdeck.setFdeck(mydeck);
+	
+	Mypaint.fdeck_menu(myfdeck);
+	std::cout << "\n";
+	system("pause");
 
 	//Mypaint.print_deck(mydeck, 5, 1, 15, 15);
 
 	Mypaint.deck_menu(mydeck);
-	//Mypaint.setcur(0, 31);
-	//Mypaint._print_deck(mydeck, 1, 10, 10);
-	//std::cout << "-----------------\n|               |\n|{s(10, 0)} hello\tWorld {s(15, 0)}|\n|               |\n-----------------\n";
-	//std::cout << Mypaint.text_without_funcs("123{4}{000}5678") << "\n\n";
-	//std::cout << Mypaint.text_without_funcs_and_break("12\n34{00\t0}56\n7\t8");
-	//Mypaint.print_text("12\n 34{00\t0} 5678907890\n7\t8", 10, 5, 10);
-	//system("pause");
+
 	return 0;
 }
 
